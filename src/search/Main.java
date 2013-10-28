@@ -1,23 +1,24 @@
 package search;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Main {
     
    public static void main(String[] args){
        Random random = new Random();
-       ArrayList<Integer> list1=new ArrayList<Integer>();
+       ArrayList<Integer> numbers = new ArrayList<Integer>();
        for (int i=0; i<10000; ++i) {
-           list1.add(random.nextInt(10000);
+           numbers.add(random.nextInt(10000));
        }
-       System.out.println(searchArray(list1.get(1), list1));
-       System.out.println(searchArray(list1.get(5), list1));
-       System.out.println(searchArray(list1.get(900), list1));       
-       System.out.println(searchArray(list1.get(3200), list1));
-       System.out.println(searchArray(list1.get(7400), list1));
-       System.out.println(searchArray(list1.get(9876), list1));
-       System.out.println(searchArray(2000000, list1));
-       System.out.println(searchArray(-45, list1));
+       System.out.println(searchArray(numbers.get(1), numbers));
+       System.out.println(searchArray(numbers.get(5), numbers));
+       System.out.println(searchArray(numbers.get(900), numbers));       
+       System.out.println(searchArray(numbers.get(3200), numbers));
+       System.out.println(searchArray(numbers.get(7400), numbers));
+       System.out.println(searchArray(numbers.get(9876), numbers));
+       System.out.println(searchArray(2000000, numbers));
+       System.out.println(searchArray(-45, numbers));
    }
    
    private static boolean searchArray(int target, ArrayList<Integer> list){
