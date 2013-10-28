@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Main {
     
-   public static void main(String[] args){
+   public static void main(String[] args) {
        Random random = new Random();
        ArrayList<Integer> numbers = new ArrayList<Integer>();
        for (int i=0; i<10000; ++i) {
@@ -21,7 +21,9 @@ public class Main {
        System.out.println(searchArray(-45, numbers));
    }
    
-   private static boolean searchArray(int target, ArrayList<Integer> list){
+   private static boolean searchArray(int target, ArrayList<Integer> list) {
+       // You can replace ThreadedSearch with LinearSearch to see this work with
+       // the given linear search code.
        ThreadedSearch<Integer> searcher=new ThreadedSearch<Integer>();
        // This specifies 4 threads for the tests. It would be a good idea to play
        // with this and see how that changes things. Keep in mind that your number
