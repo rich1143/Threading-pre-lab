@@ -1,6 +1,6 @@
 # prelab7
 
-The next lab is all about threads. To prepare, we are asking you to make a threaded version of search. You'll download some code to start with - a non-threaded search - and stubs for threaded search. The starter code can be found in the included subdirectory of this repository.  You might find (this tutorial)[http://www.tutorialspoint.com/java/java_multithreading.htm] to be helpful
+The next lab is all about threads. To prepare, we are asking you to make a threaded version of search. You'll download some code to start with - a non-threaded search - and stubs for threaded search. The starter code can be found in the included subdirectory of this repository.  You might find [this tutorial](http://www.tutorialspoint.com/java/java_multithreading.htm) to be helpful
 
 Your threads will need to share state in an array as well as having local variables that capture the locations in the array that this thread is responsible for searching.
 
