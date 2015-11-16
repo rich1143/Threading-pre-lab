@@ -1,6 +1,6 @@
 # Overview of Threads
 
-The next lab is all about threads. To prepare, we are asking you to make a threaded version of search. You'll download some code to start with - a non-threaded search - and stubs for threaded search. The starter code can be found in the included subdirectory of this repository.  You might find [this tutorial](http://www.tutorialspoint.com/java/java_multithreading.htm) to be helpful (be sure to go through the 4 additional tutorials at the bottom of that last tutorial before proceeding)
+The next lab is all about threads. To prepare, we are asking you to make a threaded version of search. You'll download some code to start with - a non-threaded search - and stubs for threaded search. The starter code can be found in the included subdirectory of this repository.  You might find [this tutorial](http://www.tutorialspoint.com/java/java_multithreading.htm) to be helpful (be sure to go through the 4 additional tutorials at the bottom of that last tutorial before proceeding).  I also found [this writeup](http://www.javaworld.com/article/2077138/java-concurrency/introduction-to-java-threads.html) to be helpful.
 
 Your threads will need to share state in an array as well as having local variables that capture the locations in the array that this thread is responsible for searching.
 
