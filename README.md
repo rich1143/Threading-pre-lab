@@ -1,15 +1,65 @@
 # Threading pre-lab
 
-The next lab is all about threads. To prepare, we are asking you to make a threaded version of search. You'll download some code to start with - a non-threaded search - and stubs for threaded search. The starter code can be found in the included subdirectory of this repository.  You might find [this tutorial](http://www.tutorialspoint.com/java/java_multithreading.htm) to be helpful (be sure to go through the 4 additional tutorials at the bottom of that last tutorial before proceeding).  I also found [this writeup](http://www.javaworld.com/article/2077138/java-concurrency/introduction-to-java-threads.html) to be helpful.
+## Background
 
-Your threads will need to share state in an array as well as having local variables that capture the locations in the array that this thread is responsible for searching.
+The next lab will use threads to parallelize a complex process, and the threads
+will need to communicate through a shared object. To prepare, in this lab
+you'll get to make a threaded version of a simple linear search algorithm.
 
-I decided to use the `implements Runnable` approach and in the `parSearch()` method I not only added an array of `Thread`s, but an `ArrayList` of `Answer`s that could be passed to the constructors for the `ThreadedSearch<T>` classes (you need an `ArrayList` of `Answers`s because `Answer` lives inside of `ThreadedSearch<T>` which, effectively, makes it a generic type and Java doesn't allow array of generic types.  Remember that Java passes by value, but we need the `run()` method to change something "outside".  Luckily, Java *effectively* passes Objects by reference.  It doesn't really... it's closer to the way C handles arrays, where you pass the *value* of a *pointer*.  The word *pointer* is not really appropriate in Java, because you don't have the ability to manipulate the "pointer" variable in ways that most people would expect of a pointer.  Instead we say that the variable holds a **reference** to an Object.  In O'Reilly's Java in a Nutshell, David Flanagan succintly explains:  "Java manipulates objects 'by reference,' but it passes object references to methods 'by value.'"
+This repository contains a non-threaded search version of the search algorithm
+along with stubs for the threaded verion that you'll need to complete.
 
-One tool that you'll need is the `join()` method. (See, for example, http://docs.oracle.com/javase/tutorial/essential/concurrency/join.html). `join()` allows one thread to wait for another to finish, which is important in searching because we need all the sub-threads to finish searching their part of the array before we can combine their answers and determine the final result. A common pattern is something like the following:
+If you want to do some reading on threads (in Java) you might find
+[this tutorial](http://www.tutorialspoint.com/java/java_multithreading.htm)
+to be helpful (be sure to go through the 4 additional tutorials at the bottom of
+  that last tutorial before proceeding).  
+You might also find [this writeup](http://www.javaworld.com/article/2077138/java-concurrency/introduction-to-java-threads.html) to be helpful.
 
-```{java}
-// Create and start a bunch of threads
+## Communicating through shared state
+
+Your threads will need to have some sort of _shared state_ that they can use to
+keep track of whether _any_ thread has found the target value so far. This
+solution deals with that by constructing a simple `Answer` object with a boolean
+field that can be set and checked. If every `Runnable` is handed _one shared_
+instance of that `Answer` object, then they can all write to it with
+`setAnswer()`.
+
+## Organizing the threads
+
+This solution is structured assuming that if you have _K_ threads, you'll
+split the list into _K_ equal sized pieces, and have each thread search a
+different piece. If the length of the list is 100, for example, and you have
+4 threads, then the threads will respectively search these sections of the
+list:
+
+* [0, 25), i.e., _0≤i<25_
+* [25, 50)
+* [50, 75)
+* [75, 100)
+
+Since these sections have no overlap, it's safe to have them searched
+independently by different threads, each updating the `Answer` if it in fact
+finds the target in its section.
+
+For this to work, we have a constructor for `ThreadedSearch` that takes the
+`target`, the `list`, the `begin` and `end` values that define the segment
+this searcher is supposed to check (e.g., 0 and 25 for the first thread in the
+example above), and the shared `Answer` object. That constructor then stores
+each of those values in fields so that they'll be available when that searchers
+`run()` method is called by its containing thread.
+
+## Waiting for all the threads to finish
+
+One tool that you'll need is the `join()` method. (See, for example, http://docs.oracle.com/javase/tutorial/essential/concurrency/join.html).
+`join()` allows one thread to wait for another to finish, which is important
+in searching because we need all the sub-threads to finish searching their
+part of the array before we can look in their shared `Answer` object and
+determine the final result.
+
+A common pattern is something like the following:
+
+```java
+   // Create and start a bunch of threads
    Thread[] threads = new Thread[NUM_THREADS];
    for (int i=0; i<NUM_THREADS; ++i) {
       // Create and start thread i
@@ -23,8 +73,16 @@ One tool that you'll need is the `join()` method. (See, for example, http://docs
    }
 
    // Combine their results and wrap up as appropriate to the problem.
-   ```
+```
 
-This assumes that the various threads have saved their partial results to some shared state object that this main thread can access to assemble the final result.
+This assumes that the various threads have saved their partial results to
+some shared state object that this main thread can access to extract and/or
+assemble the final result. In our example, the shared `Answer` object serves
+that purpose, and we'll just need to call `getAnswer()` to get the desired
+answer.
 
-It's important to realize that `join()` blocks, causing the main thread to wait until the thread being joined finishes. This means that if we had called `join()` in the first loop we would have lost all our parallelism because we would have waited for the first thread to finish before starting the second thread, etc.
+It's important to realize that `join()` blocks, causing the main thread to
+wait until the thread being joined finishes. This means that if we had
+called `join()` in the first loop we would have lost all our parallelism
+because we would have waited for the first thread to finish before starting
+the second thread, etc.
